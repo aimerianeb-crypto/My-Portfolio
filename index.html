@@ -3,58 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Date Invitation ❤️</title>
+<title>Cake Game Ultimate ❤️</title>
 
 <style>
 body{
     margin:0;
-    font-family:Arial;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    background: linear-gradient(135deg,#ff758c,#ff7eb3);
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    font-family:Arial;
     overflow:hidden;
-}
-
-/* floating hearts */
-.heart{
-    position:absolute;
     color:white;
-    font-size:20px;
-    animation: floatUp 6s linear infinite;
-    opacity:0.6;
-}
-
-@keyframes floatUp{
-    0%{transform: translateY(100vh) scale(0);}
-    100%{transform: translateY(-10vh) scale(1.5);}
 }
 
 .container{
     text-align:center;
-    color:white;
-    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
 }
 
-h1{
-    font-size:38px;
-    text-shadow:2px 2px 10px rgba(0,0,0,0.3);
-    animation: fade 0.8s ease;
-}
-
-@keyframes fade{
-    from{opacity:0; transform:scale(0.8);}
-    to{opacity:1; transform:scale(1);}
-}
-
+/* buttons */
 button{
     padding:15px 30px;
     font-size:18px;
     border:none;
     border-radius:30px;
     cursor:pointer;
-    margin:10px;
     transition:0.2s;
 }
 
@@ -62,28 +40,29 @@ button:hover{
     transform:scale(1.1);
 }
 
-#yesBtn{
-    background:#4CAF50;
-    color:white;
+#yesBtn{ background:#4CAF50; color:white; }
+#noBtn{ background:#ff4d4d; color:white; }
+
+#doneBtn, #chocoBtn, #yemaBtn{
+    display:none;
+    margin:10px;
 }
 
-#noBtn{
-    background:#ff4d4d;
-    color:white;
-    position:fixed;
+/* timer */
+#timer{
+    font-size:60px;
+    font-weight:bold;
 }
 
-/* confetti */
-.confetti{
+/* hearts */
+.heart{
     position:absolute;
-    width:10px;
-    height:10px;
-    top:-10px;
-    animation: fall 3s linear infinite;
+    animation:float 5s linear infinite;
 }
 
-@keyframes fall{
-    to{transform: translateY(100vh) rotate(360deg);}
+@keyframes float{
+    0%{transform:translateY(100vh);}
+    100%{transform:translateY(-10vh);}
 }
 
 </style>
@@ -91,92 +70,125 @@ button:hover{
 
 <body>
 
-<div class="container">
-    <h1 id="question">LOVE KO NIMO? ❤️</h1>
-
-    <div class="buttons">
+<!-- PAGE 1 -->
+<div id="page1" class="container">
+    <h1>MOKAUN KAG CAKE? 🍰</h1>
+    <div>
         <button id="yesBtn">YES</button>
         <button id="noBtn">NO</button>
     </div>
 </div>
 
+<!-- PAGE 2 -->
+<div id="page2" class="container" style="display:none;">
+    <h1>🔥 CHALLENGE 🔥</h1>
+
+    <div id="timer">10</div>
+
+    <h2>SAY THIS WORD:</h2>
+    <h1>❤️ I LOVE YOU ATE YAYA ❤️</h1>
+
+    <button id="doneBtn">DONE</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="container" style="display:none;">
+    <h1>🍰 CHOOSE YOUR CAKE 🍰</h1>
+
+    <button id="chocoBtn">🍫 CHOCO MOIST</button>
+    <button id="yemaBtn">🍮 YEMA CAKE</button>
+</div>
+
 <script>
 
-const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
-const question = document.getElementById("question");
+const noBtn = document.getElementById("noBtn");
 
-/* 💖 QUESTIONS FIXED ORDER */
-let questions = [
-"LOVE KO NIMO? ❤️",
-"ITREAT KO NIMO? 🥺",
-"WINGS HAUZ DATE TA? 🍗❤️",
-"IMO JUD KO TREAT HA? 🍕",
-"I LOVE YOUUUU ❤️"
-];
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+const page3 = document.getElementById("page3");
 
-let index = 0;
+const timer = document.getElementById("timer");
+const doneBtn = document.getElementById("doneBtn");
 
-/* 💖 floating hearts */
-function createHearts(){
-    let heart = document.createElement("div");
-    heart.innerHTML = "❤️";
-    heart.classList.add("heart");
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 10 + "px";
-    document.body.appendChild(heart);
+const chocoBtn = document.getElementById("chocoBtn");
+const yemaBtn = document.getElementById("yemaBtn");
 
-    setTimeout(()=> heart.remove(), 6000);
-}
-setInterval(createHearts, 300);
+/* NO BUTTON RUN AWAY */
+noBtn.addEventListener("mouseover", ()=>{
+    noBtn.style.position="absolute";
+    noBtn.style.left=Math.random()*80+"vw";
+    noBtn.style.top=Math.random()*80+"vh";
+});
 
-/* 💀 NO BUTTON MOVEMENT FIXED */
-noBtn.style.position = "fixed";
-noBtn.style.left = "50%";
-noBtn.style.top = "55%";
+/* YES CLICK */
+yesBtn.addEventListener("click", ()=>{
 
-function moveNo(){
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
+    page1.style.display="none";
+    page2.style.display="flex";
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}
+    let time = 10;
+    timer.innerText = time;
 
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("click", moveNo);
+    let countdown = setInterval(()=>{
 
-/* ❤️ YES BUTTON LOGIC */
-yesBtn.addEventListener("click",()=>{
+        time--;
+        timer.innerText = time;
 
-    index++;
-
-    if(index < questions.length){
-        question.innerHTML = questions[index];
-    } else {
-
-        document.body.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:pink;font-family:Arial;text-align:center;">
-            <div>
-                <h1>YAY!! ❤️🥰</h1>
-                <h2>See you tonight! 💖</h2>
-                <p>I LOVE YOU ❤️</p>
-            </div>
-        </div>
-        `;
-
-        /* 🎉 CONFETTI EFFECT */
-        for(let i=0;i<60;i++){
-            let conf = document.createElement("div");
-            conf.classList.add("confetti");
-            conf.style.left = Math.random()*100 + "vw";
-            conf.style.background = ["#fff","#ff0","#f0f","#0ff"][Math.floor(Math.random()*4)];
-            conf.style.animationDuration = (Math.random()*3+2) + "s";
-            document.body.appendChild(conf);
+        if(time <= 0){
+            clearInterval(countdown);
+            timer.innerText = "DONE NA 😆";
+            doneBtn.style.display="block";
         }
-    }
+
+    },1000);
 
 });
+
+/* DONE → PAGE 3 */
+doneBtn.addEventListener("click", ()=>{
+
+    page2.style.display="none";
+    page3.style.display="flex";
+
+    chocoBtn.style.display="block";
+    yemaBtn.style.display="block";
+
+});
+
+/* CHOCO */
+chocoBtn.addEventListener("click", ()=>{
+    document.body.innerHTML = `
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:linear-gradient(135deg,#ff758c,#ff7eb3);font-family:Arial;color:white;text-align:center;">
+        <div>
+            <h3>PAGPALIT HAHAHAHAHAHAHAHA 😂</h3>
+        </div>
+    </div>
+    `;
+});
+
+/* YEMA */
+yemaBtn.addEventListener("click", ()=>{
+    document.body.innerHTML = `
+    <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:linear-gradient(135deg,#ff758c,#ff7eb3);font-family:Arial;color:white;text-align:center;">
+        <div>
+            <h3>PAGPALIT HAHAHAHAHAHAHAHA 😂</h3>
+        </div>
+    </div>
+    `;
+});
+
+/* FLOATING HEARTS */
+setInterval(()=>{
+    let heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(),5000);
+},300);
 
 </script>
 
